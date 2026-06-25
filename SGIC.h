@@ -35,7 +35,7 @@ int LoadMetadata(int *_cars_number, int *_customers_number);
 void strTolower(char string[], char new_str[]);
 
 // Analiza las preferencias de un cliente y las compara con el inventario actual
-Car* getCustomerCarOptions(Car *_cars_list, Customer **_customers_list, int *_cars_number, int *_customers_number);
+Car* getCustomerCarOptions(Car *_cars_list, Customer **_customers_list, int *_cars_number, int *_customers_number, double *earnings, float user_profit_percentage);
 
 
 #endif

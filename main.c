@@ -32,15 +32,27 @@ int main(){
     loadCars(car_list, cars_number);
     loadCustomers(customers_list, customers_number);
 
+    // Datos De Vendedor
+    char seller_name[51];
+    double seller_earnings= 0;
+    float profit_percentage= 0;
+
+    /////////   INICIALIZAR VENDEDOR     ///////
+
+    printf("Ingrese el nombre del vendedor:\n  ");
+    readLine(seller_name, 50);
+    printf("Ingrese su porcentaje de ganancia por venta (0-100)\n");
+    readFloatLoop("Porcentaje (%) >>> ", &profit_percentage, 0, 100);
 
     /////////   BUCLE PRINCIPAL DEL PROGRAMA    //////////
 
     printf("\nSistema de Gestion De Inventario y Clientes\n\n");
+    printf("Bienvenido %s\n", seller_name);
 
     do{
 
         drawMainMenu();
-        readIntLoop("Opcion >>> ", &user_option, 1, 4);
+        readIntLoop("Opcion >>> ", &user_option, 1, 5);
 
         switch (user_option){
             /* Menu Vehiculos */
@@ -80,12 +92,26 @@ int main(){
             /*  Buscar Auto Perfecto */
             case 3:
 
-                car_list= getCustomerCarOptions(car_list, &customers_list, &cars_number, &customers_number);
+                car_list= getCustomerCarOptions(car_list, &customers_list, &cars_number, &customers_number, &seller_earnings, profit_percentage);
+
+                break;
+
+            /*  Ganancias */
+            case 4:
+
+                printf("\n|| GANANCIAS DEL VENDEDOR ||\n\n");
+
+                if(seller_earnings == 0){
+                    printf("No se han realizado ventas\n");
+                    break;
+                }
+
+                printf("\nGanancias del vendedor %s: $%g\n", seller_name, seller_earnings);
 
                 break;
 
             /*  Salir */
-            case 4:
+            case 5:
                 printf("Saliendo...\n");
 
                 break;
@@ -96,7 +122,7 @@ int main(){
             break;
         }
 
-    }while(user_option != 4);
+    }while(user_option != 5);
 
     // Guardar Metadatos
     printf("Guardando Datos...\n");

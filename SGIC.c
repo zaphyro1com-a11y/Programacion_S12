@@ -16,11 +16,12 @@ void drawMainMenu(){
         "V E H I C U L O S",
         "C L I E N T E S",
         "B U S C A R",
+        "G A N A N C I A S",
         "S A L I R",
 
     };
 
-    drawMenu("S G I C", main_menu_options, 4);
+    drawMenu("S G I C", main_menu_options, 5);
 
 }
 
@@ -231,9 +232,9 @@ void strTolower(char string[], char new_str[]) {
     new_str[i] = '\0'; 
 }
 
-Car* getCustomerCarOptions(Car *_cars_list, Customer **_customers_list, int *_cars_number, int *_customers_number){
+Car* getCustomerCarOptions(Car *_cars_list, Customer **_customers_list, int *_cars_number, int *_customers_number, double *earnings, float user_profit_percentage){
 
-    int user_option, customer_indx, options_number=0;
+    int user_option, customer_indx, options_number=0, selected_car_indx;
     int options_indx[10];
     Car *Options = malloc(sizeof(Car)*1);
 
@@ -377,11 +378,38 @@ Car* getCustomerCarOptions(Car *_cars_list, Customer **_customers_list, int *_ca
     readIntLoop(" >>> ", &user_option, 1, 2);
 
     if(user_option == 1){
-        
-        printf("Ingrese el indice del vehiculo a eliminar\n");
-        readIntLoop("Indice >>> ", &user_option, 0, options_number-1);
-        _cars_list= removeCarDirect(_cars_list, _cars_number, options_indx[user_option]);
+        // VENDER VEHICULO y Eliminarlo del Inventario
+        double earning;
+        printf("Ingrese el indice del vehiculo a vender\n");
+        readIntLoop("Indice >>> ", &selected_car_indx, 0, options_number-1);
 
+        // Mostrar Datos del Vehiculo Seleccionado
+        printf("\nEl vehiculo seleccionado es:\n");
+        printf("Marca: %s\n", Options[selected_car_indx].brand);
+        printf("Modelo: %s\n", Options[selected_car_indx].model);
+        printf("Tipo: %s\n", Options[selected_car_indx].type);
+
+        // Calcular Ganancias
+        printf("\nIngrese el precio de venta del vehiculo\n");
+        readDoubleLoop("Precio >>> ", &earning, 0, 10000000);
+        if(earning < Options[selected_car_indx].price){
+            printf("\nEl precio de venta es menor al precio del vehiculo\nNo se puede realizar la venta\n");
+            return _cars_list;
+
+        }else if(earning == Options[selected_car_indx].price){
+            printf("\nEl precio de venta es igual al precio del vehiculo\n Si realiza la venta, no habrá ganancia\n");
+            printf("Desea continuar con la venta?\n(1) SI\n(2) NO\n");
+            readIntLoop(" >>> ", &user_option, 1, 2);
+
+        }else{
+            printf("\nLa venta se realizara sin problemas\n");
+            printf("Desea continuar con la venta?\n(1) SI\n(2) NO\n");
+            readIntLoop(" >>> ", &user_option, 1, 2);
+
+        }
+        
+        _cars_list= (user_option == 1)? removeCarDirect(_cars_list, _cars_number, options_indx[selected_car_indx]) : _cars_list;
+        *earnings += (user_option == 1)? (earning - Options[selected_car_indx].price) * (user_profit_percentage / 100) : 0;
     }
 
     free(Options);
